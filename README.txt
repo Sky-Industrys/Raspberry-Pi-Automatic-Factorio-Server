@@ -1,9 +1,22 @@
+Main Notes
+
 Hardware/Software used:
 
-Raspi 4B w/ official 15W power supply
+Raspi 4B 4GB w/ official 15W power supply
 Factorio headless server for Linux
+box64
 Unattended Upgrages
 Built-in Linux programs (bash, crontab)
 
 To start, the server was set up according to the Factorio Wiki's Multiplayer page (https://wiki.factorio.com/Multiplayer).
-Once the unzipped file for the headless server (free download from https://www.factorio.com/download) was on the Raspi and in /opt/factorio, a non-root user was created to protect the Pi from external attacks (good practice, although many "good practice" steps were likely skipped)
+Once the unzipped file for the headless server (free download from https://www.factorio.com/download) was on the Raspi and in /opt/factorio, a non-root user was created to protect the Pi from external attacks (good practice, although many "good practice" steps were likely skipped due to ingnorance). This user was assigned to the factorio folder in /opt/.
+World creation was done on the desktop version of the game to get a preview image (and make world creation easier), then uploaded through a USB drive to a newly created saves folder.
+use of the startup script "/opt/factorio/bin/x64/factorio --start-server /opt/factorio/saves/MultiplayerSave.zip. This command caused problems, as it did not take the customized server settings file so the server was not published (since factorio servers require a player login).
+Oh, not to mention the need for an x86 emulator, since the Pi is am ARM processor and the headless version of Factorio does not support ARM. box64 is used to emulate a x86 processor to run the server properly (once installed it autoruns every time it identifies a program that needs x86 emulation).
+The fixed command was this: "/opt/factorio/bin/x64/factorio --server-settings /opt/factorio/data/server-settings-json --start-server /opt/factorio/saves/MultiplayerSave.zip" This fixed the issue, and with a simple port forward for the Pi (which had to be modified between the WiFi connection and wired connection since the local IP was different for each).
+Turns out, the RasPi is pretty good at running a Factorio server. Another player had made a server on a RasPi 5 (see here: https://forums.factorio.com/viewtopic.php?t=117117). From the post, it looks like this setup will likely take the game through a couple of planets in space age, but eventually will be overloaded and cause major latency issues.
+Testing of the server went well, latency between conneting the Pi over WiFi versus Ethernet was light and day, and Factorio's built in server publising made connecting external clients very easy (minus the inability to search for servers in the public server list).
+From here, creating an automated server on/off "script" paired with powering the Pi on and off would provide both larger off-time for the server (to help prevent hackers getting into the world and destroying things) paired with lower power consumption during shutdown (granted, the Pi already has low power consumption, so although it is not necessary to turn the Pi off and on it still decreases total power use and risk of hacking while the processor is off, maybe).
+The use of crontab made turning off the Pi and starting the server fairly easy, as to shutdown the Pi all you need is "10 0 * * * sudo shutdown -h now" with your selected time (time selected was 00:10, as seen in crontab syntax before the shutdown command). This was put into the "root" user crontab config (since it was technically not root, but the admin profile for the pie, "root" was used). To start the Factorio server (or any program for that matter) with crontab, the line "0 10 * * * /opt/factorio/bin/x64/factorio --server-settings /opt/factorio/data/server-settings-json --start-server /opt/factorio/saves/MultiplayerSave.zip" was put into the user that is assined to the Factorio server folder's crontab config.
+This is where things got a little more difficult (for a begineer, that is) as stoping the Factorio server required sending a bash command equivilent to the keyboard input "ctrl + C". There is a Steam forum page that points to the use of "kill", which was a good start, although after far too much testing it turned out that to kill the server the PID of the server instance was needed to stop it. Unfortunatly, this PID chages every time that the server is started, so to shut the server down reliably a new solution was needed. Thankfully, linux has a great function for this, called "pkill". pkill allows a user to simply put the name of the process (in this case, "factorio" was used) and it kills any associated process (for this use case, that is). Since the Pi user that "owns" that factorio server only is allowed to mess with that folder, no other processes should be affected. Probably.
+Now comes the worst of all, restarting the Pi [this section is yet to be completed, please see the issues tab].
