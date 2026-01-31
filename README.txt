@@ -14,7 +14,7 @@ Low power halt state (no power to GPIO) with a pushbutton attached to GLOBAL_EN 
 Use crontab to boot server on startup with appropriate options and start scripts from Factorio Wiki's Multiplayer page (https://wiki.factorio.com/Multiplayer).
 In early hours of the morning, during a time the server has no one online, use crontab to shut the server down, then send the Pi to halt state.
 
-Simple, yet effective for semi-rare play sessions.
+Simple, yet effective for semi-rare play sessions. Factorio updates are a pain still.
 
 To start, the server was set up according to the Factorio Wiki's Multiplayer page (https://wiki.factorio.com/Multiplayer).
 Once the unzipped file for the headless server (free download from https://www.factorio.com/download) was on the Raspi and in /opt/factorio, a non-root user was created to protect the Pi from external attacks (good practice, although many "good practice" steps were likely skipped due to ingnorance). This user was assigned to the factorio folder in /opt/.
