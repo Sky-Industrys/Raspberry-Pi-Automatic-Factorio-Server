@@ -8,6 +8,14 @@ box64
 Unattended Upgrages
 Built-in Linux programs (bash, crontab)
 
+There is a lot of rambling below, so the short story is:
+
+Low power halt state (no power to GPIO) with a pushbutton attached to GLOBAL_EN to reset the power IC when you want the server on.
+Use crontab to boot server on startup with appropriate options and start scripts from Factorio Wiki's Multiplayer page (https://wiki.factorio.com/Multiplayer).
+In early hours of the morning, during a time the server has no one online, use crontab to shut the server down, then send the Pi to halt state.
+
+Simple, yet effective for semi-rare play sessions.
+
 To start, the server was set up according to the Factorio Wiki's Multiplayer page (https://wiki.factorio.com/Multiplayer).
 Once the unzipped file for the headless server (free download from https://www.factorio.com/download) was on the Raspi and in /opt/factorio, a non-root user was created to protect the Pi from external attacks (good practice, although many "good practice" steps were likely skipped due to ingnorance). This user was assigned to the factorio folder in /opt/.
 World creation was done on the desktop version of the game to get a preview image (and make world creation easier), then uploaded through a USB drive to a newly created saves folder.
